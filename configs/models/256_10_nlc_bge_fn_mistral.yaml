@@ -1,0 +1,77 @@
+data_dir: "eur_lex_data"  # Subdirectory in the /data directory
+preprocessing_steps:
+  transform_footnotes_preprocessor: {}
+  remove_html_tags_preprocessor: {}
+  dict_splitter:
+    splitter: "recursive_character_splitter"
+    splitter_kwargs:
+      chunk_size: 256
+      chunk_overlap: 32
+      separators: [" "]
+    split_field: "text"
+preprocessing_args:
+  drop_keys:
+    - "html"  # Do not save the html field since it slows down the saving and loading process
+document_loader: "directory_json"
+document_loader_args:
+  content_key: "text"
+document_content_description: "Exerpt of the EUR-Lex document."
+embeddings: "BAAI/bge-large-en-v1.5"
+embedding_args:
+  cuda_enabled: true
+  device: "cuda:0"
+retriever: "FAISS"
+retriever_args:
+  k_retrieved_documents: 10
+postprocessor: "append_all_citation_postprocessor"
+postprocessor_args: {}
+chat_history_window_size: 2
+index_name: "256_bge_fn"
+prompt: "citation_history_v3"
+model: "mistral"
+output_parser: "str_output_parser"
+log_conversation: true
+debug: false
+cache: true
+mapping:
+  date_of_document:
+    json_key: ["Dates", "Date of document"]
+    description: "The date of the EUR-Lex document."
+    type: "date"
+  date_of_effect:
+    json_key: ["Dates", "Date of effect"]
+    description: "The date of effect of the EUR-Lex document, inicating when the regulation came into force."
+    type: "date"
+  date_of_signature:
+    json_key: ["Dates", "Date of signature"]
+    description: "The date when the EUR-Lex document was signed by the authorities."
+    type: "date"
+  date_of_end_of_validity:
+    json_key: ["Dates", "Date of end of validity"]
+    description: "The date from which on the EUR-Lex document is no longer valid, i.e. expired or repealed."
+    type: "date"
+  author:
+    json_key: ["Misc", "Author"]
+    description: "The author of the document. A person, organization, institution or country."
+    type: "string"
+  form:
+    json_key: ["Misc", "Form"]
+    description: "The form of the document. One of [Decision, Directive, Regulation, Opinion, Resolution, Implementing Decision, International Agreement, Delegated Regulation, Recommendation, Implementing Regulation, Protocol to the agreement, Special Report, Communication, Exchange of Letters, Amendment to an agreement, Convention, Rules of procedure]"
+    type: "string"
+  internal_comment:
+    json_key: ["Misc", "Internal comment"]
+    description: "Internal comments on the document."
+    type: "string"
+  depositary:
+    json_key: ["Misc", "Depositary"]
+    description: "The facility where the document is deposited for storage or safekeeping"
+    type: "string"
+  CELEX_ID:
+    json_key: ["CELEX_ID"]
+    description: "The CELEX ID of the document"
+    type: "string"
+  ID:
+    json_key: ["ID"]
+    description: "A unique identifier of the document"
+    type: "int"
+evaluate: true
