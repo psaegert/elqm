@@ -12,7 +12,7 @@ huggingface_hub
 jq
 langchain==0.1.9
 langchain-core==0.1.27
-langchain_experimental==0.0.52
+langchain_experimental==0.0.61
 langchainhub==0.1.14
 langsmith==0.1.10
 lark
